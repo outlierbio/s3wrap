@@ -4,15 +4,25 @@ Use S3 URIs as arguments for any command-line tool
 # Getting started
 
 ## Installation
-  pip install s3wrap
+
+    pip install git+https://github.com/outlierbio/s3wrap.git
   
-## Usage
+## Quick start
 Just prefix your commands with s3wrap and substitute S3 URIs wherever you would use filepaths.
 
-  $ s3wrap md5sum s3://bucket/file > s3://bucket/file.md5
-  $ s3wrap cat s3://bucket/file1 s3://bucket/file2 > s3://your-bucket/file1_and_2
-  $ s3wrap cat s3://bucket/file1_and_2 -
-  <file contents>
+    $ s3wrap md5sum s3://bucket/file > s3://bucket/file.md5
+    $ s3wrap cat s3://bucket/file1 s3://bucket/file2 > s3://your-bucket/file1_and_2
+    $ s3wrap cat s3://bucket/file1_and_2 -
+    <file contents>
+
+You can also use it as a Python decorator, to swap S3 arguments for functions that expect filepaths:
+
+    from s3wrap import s3args
+    @s3args()
+    def sync_and_run(*cmds):
+        print('Running:\n{}'.format(' '.join(cmds)))
+        return check_output(cmds)
+
   
 ## How it works
 `s3wrap` is a python wrapper that examines your arguments for S3 URIs (i.e., starts with `s3://`), and follows these steps when it finds them:
